@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def step_function(x):
-    retrun np.where(x<=0, 0, 1)
+    return np.where(x<=0, 0, 1)
     
 x=np.linspace(-5,5)
 y=step_function(x)
 
-plot.plot(x,y)
+plt.plot(x,y)
 plt.show()
