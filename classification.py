@@ -45,5 +45,5 @@ for i in range(20):
             y_2.append(Y[j])
             
 plt.scatter(x_1,y_1,marker="+")
-plt.scatter(x_2,y_2,marker="+")
+plt.scatter(x_2,y_2,marker="o")
 plt.show()
