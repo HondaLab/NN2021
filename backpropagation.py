@@ -128,13 +128,12 @@ for i in range(epoch):
               x_2.append(x[0])
               y_2.append(x[1])
 
-        if i%interval == 0:
+     if i%interval == 0:
 
-          plt.plot(X, sin_data, linestyle='dashed')
-          plt.scatter(x_1, y_1, marker="+")
-          plt.scatter(x_2, y_2, marker="x")
-          plt.savefig("ssss.pdf",bbox_inches='tight')
-          #plt.show()
+        plt.plot(X, sin_data, linestyle='dashed')
+        plt.scatter(x_1, y_1, marker="+")
+        plt.scatter(x_2, y_2, marker="x")
+        #plt.savefig("ssss.pdf",bbox_inches='tight')
+        plt.show()
 
-          print("Epoch:" + str(i) + "/" + str(epoch),
-                "Error:" + str(total_error/n_data))
+        print("Epoch:" + str(i) + "/" + str(epoch),"Error:" + str(total_error/n_data))
