@@ -27,7 +27,7 @@ wb_width = 0.01
 eta = 0.1
 epoch = 101
 interval = 10
-batchsize = int(n_data/10) 
+batchsize = int(n_data)
 
 class MiddleLayer:
     def __init__(self, n_upper, n):
