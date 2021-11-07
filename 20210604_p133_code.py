@@ -1,5 +1,5 @@
 #教科書P１３３～１３４のコードです。
-
+#push test 20211107
 import numpy as np
 import matplotlib.pyplot as plt
 
