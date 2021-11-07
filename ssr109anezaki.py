@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# 手動でカメラの向きを変えられる。tofセンサーの値を出力できる。
+
 # ssr109a.py
 # Yasushi Honda 2021 9/3
 
