@@ -7,6 +7,8 @@ import datetime
 import numpy as np
 import cv2
 import time
+import random #124行目のcpxに影響
+
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 from subprocess import Popen
@@ -43,6 +45,11 @@ class PI_CAMERA_CLASS():
       self.RES_X=int( 320 )
       self.RES_Y=int( 320 )
       
+      #色を追うプログラム用
+      self.maxpix=float(self.RES_X)      
+      print("max_pix_Xline")
+      print(" ",self.maxpix)
+      
       # initialize the camera and grab a reference to the raw camera capture
       #カメラを初期化，カメラへのアクセス？ルート？オブジェクト作成？
       self.cam = PiCamera()
@@ -60,7 +67,7 @@ class PI_CAMERA_CLASS():
       self.cam.iso=400
       self.cam.shutter_speed=1000000
       self.cam.exposure_mode = 'off' # off, auto, fixedfps
-      time.sleep(3)
+      time.sleep(0.5)                                                                        #21/11/24　(3)だったのを変えてみる
       self.g = self.cam.awb_gains
       self.cam.awb_mode = 'off'
       self.cam.awb_gains = self.g
@@ -89,6 +96,9 @@ class PI_CAMERA_CLASS():
       mask = cv2.inRange(hsv, lower, upper)
       image, contours, hierarchy  = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
       rects = []
+      
+      maxpix=self.maxpix
+      
       for contour in contours:
          approx = cv2.convexHull(contour)
          rect = cv2.boundingRect(approx)
@@ -104,8 +114,9 @@ class PI_CAMERA_CLASS():
          width = self.data[2]
          height = self.data[3]
          
-         cpx = px + (width/2) #画像のセンター(x)
+         cpx = float( px + (width/2.0) ) #画像のセンター(x),float型にした．21/11/22
          cpy = py + (height/2) #画像のセンター(y)
+         
          
          rad = (cpx-160)*(52/160)*(np.pi/180)
          angle = np.rad2deg(rad)
@@ -113,12 +124,15 @@ class PI_CAMERA_CLASS():
          dis = float(dis/100)
          #print("\r %6.4f %6.4f" % (angle, dis ), end="" )
          self.rawCapture.truncate(0) # clear the stream for next frame
+         
+         
       else: #red cup not capture
          dis = None
          rad = None
-         cpx = None
+         cpx = random.uniform(1,maxpix)
       self.rawCapture.truncate(0) # clear the stream for next frame
-      return dis, cpx, frame #dis,rad,frame　だった．21/11/17
+      
+      return frame, cpx, maxpix #dis,rad,frame　だった．21/11/17
 
 
    def calc_hsv(self):
