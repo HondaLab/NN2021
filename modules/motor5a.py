@@ -38,10 +38,10 @@ class Rmotor(Motor):
    def run(self,power):
       output=62*np.arctanh(power/101)+6*np.sign(power)
       self.move(output)
-       
+
 if __name__=='__main__':
    # Motor output
-   OUTPUT=-100.0
+   OUTPUT=61.0
 
    # Length of time
    Time_Length= 5.0
@@ -53,14 +53,18 @@ if __name__=='__main__':
    # rate調整用の待ち時間(秒)
    SLEEP=0.0333
 
-   # LeftモーターをGPIO=17に、Rightモーターを18につなぐ。
-   motorL = Lmotor(27)
-   motorR = Rmotor(18)
-   
+   # LeftモーターをGPIO=23に、Rightモーターを14につなぐ。
+   motorL = Lmotor(23)
+   motorR = Rmotor(14)
+
+   # CamモーターをGPIO=18につなぐ
+   motorCam = Cammotor(18)
+
 
    # 左右のモーター出力をゼロに初期化する。
    motorL.run(0)
    motorR.run(0)
+   motorCam.ChangeDutyCycle(7.5)
    time.sleep(1)
 
    # 各変数の初期化
@@ -70,7 +74,7 @@ if __name__=='__main__':
    now=start
    while now-start<Time_Length:
       left=OUTPUT
-      now=time.time() 
+      now=time.time()
       print("\r %5.2f/%5.2f %5.2f" %(now-start,Time_Length,left),end="")
 
       right=left
@@ -85,5 +89,6 @@ if __name__=='__main__':
    # モーター出力をゼロにもどして止める
    motorL.run(0)
    motorR.run(0)
+
    motorL.stop()
    motorR.stop()
