@@ -4,18 +4,18 @@
 # This modeule code is to access trible vl53l0x connected GPIO of RasPi
 
 # MIT License
-#
+# 
 # Copyright (c) 2017 John Bryan Moore
-#
+# 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-#
+# 
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-#
+# 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -32,11 +32,11 @@ import RPi.GPIO as GPIO
 def start():
 
    # GPIO for Sensor 1 shutdown pin
-   sensor1_shutdown = 27#カメラモーター横のtofセンサー
+   sensor1_shutdown = 22
    # GPIO for Sensor 2 shutdown pin
-   sensor2_shutdown = 22#右
+   sensor2_shutdown = 4
    # GPIO for Sensor 3 shutdown pin
-   sensor3_shutdown = 4#左
+   sensor3_shutdown = 17
 
    GPIO.setwarnings(False)
 
@@ -45,6 +45,7 @@ def start():
    GPIO.setup(sensor1_shutdown, GPIO.OUT)
    GPIO.setup(sensor2_shutdown, GPIO.OUT)
    GPIO.setup(sensor3_shutdown, GPIO.OUT)
+   time.sleep(1)
 
    # Set all shutdown pins low to turn off each VL53L0X
    GPIO.output(sensor1_shutdown, GPIO.LOW)
@@ -52,29 +53,30 @@ def start():
    GPIO.output(sensor3_shutdown, GPIO.LOW)
 
    # Keep all low for 500 ms or so to make sure they reset
-   time.sleep(0.50)
+   time.sleep(1)
 
    # Create one object per VL53L0X passing the address to give to each.
    tof1 = vl53.VL53L0X(address=0x2B)
    tof2 = vl53.VL53L0X(address=0x2D)
    tof3 = vl53.VL53L0X(address=0x2C)
+   time.sleep(1)
 
-   # Set shutdown pin high for the first VL53L0X then
-   # call to start ranging
+   # Set shutdown pin high for the first VL53L0X then 
+   # call to start ranging 
    GPIO.output(sensor1_shutdown, GPIO.HIGH)
    time.sleep(0.50)
    tof1.start_ranging(vl53.VL53L0X_HIGH_SPEED_MODE)
    #tof1.start_ranging(vl53.VL53L0X_BETTER_ACCURACY_MODE)
    #tof1.start_ranging(vl53.VL53L0X_LONG_RANGE_MODE)
 
-   # Set shutdown pin high for the second VL53L0X then
-   # call to start ranging
+   # Set shutdown pin high for the second VL53L0X then 
+   # call to start ranging 
    GPIO.output(sensor2_shutdown, GPIO.HIGH)
    time.sleep(0.50)
    tof2.start_ranging(vl53.VL53L0X_HIGH_SPEED_MODE)
 
-   # Set shutdown pin high for the second VL53L0X then
-   # call to start ranging
+   # Set shutdown pin high for the second VL53L0X then 
+   # call to start ranging 
    GPIO.output(sensor3_shutdown, GPIO.HIGH)
    time.sleep(0.50)
    tof3.start_ranging(vl53.VL53L0X_HIGH_SPEED_MODE)
@@ -107,27 +109,28 @@ if __name__=="__main__":
    init=now
    rate=0
    print("Input 'q' to stop this program")
+   print(" Time  |  left  |  center  |  right")
    key='c'
    while key!='q':
       try:
-         distance1 = tof1.get_distance()
+         left = tof1.get_distance()
          time.sleep(0.02)
-         distance2 = tof2.get_distance()
+         right = tof2.get_distance()
          time.sleep(0.02)
-         distance3 = tof3.get_distance()
+         center = tof3.get_distance()
          now = time.time()
          rate+=1
-         #print (" %6.2f %d %d mm" % (now-start, distance, distance1) )
+         print ("\r %4.2f     %d      %d       %d mm" % (now-start, left, center , right), end="" )
          #time.sleep(timing/1000000.00)
-         #time.sleep(0.01)
+         time.sleep(0.01)
 
-
-         if now-init>period:
+         """
+         if now-init>period: 
             rate=rate/period
             print ("\r time=%6.2f %4d %4d %4d mm rate=%3d" % (now-start, distance1, distance2,distance3,rate), end=' ')
             rate=0
             init=now
-
+         """
       except :
          pass
 
